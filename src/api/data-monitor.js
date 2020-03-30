@@ -9,3 +9,12 @@ export function fetchTask(query) {
     params: query
   })
 }
+
+// 新增task
+export function createTask(data) {
+  return request({
+    url: base_url + 'tasks',
+    method: 'post',
+    params: data
+  })
+}

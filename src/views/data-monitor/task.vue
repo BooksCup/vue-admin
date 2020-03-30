@@ -88,14 +88,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="任务名:" prop="name">
-          <el-input v-model="temp.email" placeholder="任务名(选填)" />
+          <el-input v-model="temp.name" placeholder="任务名(选填)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="createFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="createAccount()">
+        <el-button type="primary" @click="createTask()">
           保存
         </el-button>
       </div>
@@ -104,8 +104,8 @@
 </template>
 
 <script>
-  import { createAccount, updateAccount } from '../../api/econtract'
-  import { fetchTask } from '../../api/data-monitor'
+  import { updateAccount } from '../../api/econtract'
+  import { fetchTask, createTask } from '../../api/data-monitor'
   import waves from '@/directive/waves' // waves directive
   import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -221,10 +221,10 @@
         this.dialogStatus = 'update'
         this.updateFormVisible = true
       },
-      createAccount() {
+      createTask() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            createAccount(this.temp).then(response => {
+            createTask(this.temp).then(response => {
               this.createFormVisible = false
               const code = response.status
               if (code === 200) {
