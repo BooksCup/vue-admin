@@ -130,23 +130,23 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/e-contract',
+    path: '/data-monitor',
     component: Layout,
     redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
-    name: 'Econtract',
+    name: 'dataMonitor',
     meta: {
-      title: '电子合同',
+      title: '数据监控',
       icon: 'clipboard',
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
-        path: 'account',
-        component: () => import('@/views/e-contract/account'),
-        name: 'account',
+        path: 'task',
+        component: () => import('@/views/data-monitor/task'),
+        name: 'task',
         meta: {
-          title: '个人账号'
+          title: '任务'
         }
       },
       {
