@@ -67,7 +67,13 @@
 
       <el-table-column align="center" min-width="100px" label="操作">
         <template slot-scope="{row, $index}">
-          <el-button size="small" type="primary" icon="el-icon-download" @click="handleUpdate(row, $index)" />
+          <el-button
+            size="small"
+            type="primary"
+            icon="el-icon-download"
+            :disabled="row.fileName === '' || row.fileName === null"
+            @click="handleDownload(row)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -111,6 +117,7 @@
 
 <script>
   import { fetchTask, createTask } from '../../api/data-monitor'
+  import { report_file_url } from '@/utils/config'
   import waves from '@/directive/waves' // waves directive
   import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -209,6 +216,11 @@
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })
+      },
+      handleDownload(row) {
+        const a = document.createElement('a')
+        a.href = report_file_url + row.fileName
+        a.click()
       },
       createTask() {
         this.$refs['dataForm'].validate((valid) => {
