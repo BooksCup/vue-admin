@@ -35,21 +35,27 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="210px" label="批号">
+      <el-table-column align="center" width="210px" label="批次号">
         <template slot-scope="scope">
           <span>{{ scope.row.batchNo }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="210px" label="状态">
+      <el-table-column align="center" width="120px" label="状态">
         <template slot-scope="scope">
-          <span>{{ scope.row.status | statusFilter }}</span>
+          <span :style="scope.row.status | statusClassFilter">{{ scope.row.status | statusFilter }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="210px" label="异常数据">
+      <el-table-column align="center" width="120px" label="异常数据">
         <template slot-scope="scope">
           <span>{{ scope.row.outLierDataNum }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" width="210px" label="耗时">
+        <template slot-scope="scope">
+          <span>{{ scope.row.costTime }}</span>
         </template>
       </el-table-column>
 
@@ -104,7 +110,6 @@
 </template>
 
 <script>
-  import { updateAccount } from '../../api/econtract'
   import { fetchTask, createTask } from '../../api/data-monitor'
   import waves from '@/directive/waves' // waves directive
   import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -139,6 +144,15 @@
       },
       statusFilter(status) {
         return statusKeyValue[status]
+      },
+      statusClassFilter(status) {
+        const statusClassMap = {
+          '0': 'color:black;',
+          '1': 'color:orange;',
+          '2': 'color:green;',
+          '3': 'color:red;'
+        }
+        return statusClassMap[status]
       }
     },
     data() {
@@ -160,16 +174,7 @@
         textMap: {
           create: '创建任务'
         },
-        temp: {
-          id: '',
-          name: '',
-          thirdPartyUserId: '',
-          idType: 'CRED_PSN_CH_IDCARD',
-          idNumber: '',
-          mobile: '',
-          email: '',
-          createTime: ''
-        },
+        temp: {},
         accountId: ''
       }
     },
@@ -197,18 +202,6 @@
           type: '0'
         }
       },
-      initTemp(row) {
-        this.temp = {
-          id: row.id,
-          name: row.name,
-          thirdPartyUserId: row.thirdPartyUserId,
-          idType: row.idType,
-          idNumber: row.idNumber,
-          mobile: row.mobile,
-          email: row.email,
-          createTime: row.createTime
-        }
-      },
       handleCreate() {
         this.resetTemp()
         this.dialogStatus = 'create'
@@ -216,11 +209,6 @@
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })
-      },
-      handleUpdate(row, index) {
-        this.initTemp(row)
-        this.dialogStatus = 'update'
-        this.updateFormVisible = true
       },
       createTask() {
         this.$refs['dataForm'].validate((valid) => {
@@ -246,38 +234,6 @@
               const errorMsg = error.response.data.apiResultMessage
               this.$notify({
                 message: '创建失败:' + errorMsg,
-                type: 'error',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
-      updateAccount() {
-        this.$refs['updateForm'].validate((valid) => {
-          if (valid) {
-            updateAccount(this.temp).then(response => {
-              this.updateFormVisible = false
-              const code = response.status
-              if (code === 200) {
-                this.$notify({
-                  message: '编辑成功',
-                  type: 'success',
-                  duration: 2000
-                })
-                const index = this.list.findIndex(v => v.id === this.temp.id)
-                this.list.splice(index, 1, this.temp)
-              } else {
-                this.$notify({
-                  message: '编辑失败',
-                  type: 'error',
-                  duration: 2000
-                })
-              }
-            }).catch(error => {
-              const errorMsg = error.response.data.apiResultMessage
-              this.$notify({
-                message: '编辑失败:' + errorMsg,
                 type: 'error',
                 duration: 2000
               })
