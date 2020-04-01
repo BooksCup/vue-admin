@@ -148,30 +148,30 @@ export const asyncRoutes = [
         meta: {
           title: '任务'
         }
-      },
-      {
-        path: 'personal-seal/:id',
-        component: () => import('@/views/e-contract/personal-seal'),
-        name: 'personal-seal',
-        meta: { title: '个人印章', noCache: true, activeMenu: '/e-contract/account' },
-        hidden: true
-      },
-      {
-        path: 'org',
-        component: () => import('@/views/e-contract/org'),
-        name: 'org',
-        meta: {
-          title: '机构账号'
-        }
-      },
-      {
-        path: 'token',
-        component: () => import('@/views/e-contract/token'),
-        name: 'Token',
-        meta: {
-          title: 'token'
-        }
       }
+      // {
+      //   path: 'personal-seal/:id',
+      //   component: () => import('@/views/e-contract/personal-seal'),
+      //   name: 'personal-seal',
+      //   meta: { title: '个人印章', noCache: true, activeMenu: '/e-contract/account' },
+      //   hidden: true
+      // },
+      // {
+      //   path: 'org',
+      //   component: () => import('@/views/e-contract/org'),
+      //   name: 'org',
+      //   meta: {
+      //     title: '机构账号'
+      //   }
+      // },
+      // {
+      //   path: 'token',
+      //   component: () => import('@/views/e-contract/token'),
+      //   name: 'Token',
+      //   meta: {
+      //     title: 'token'
+      //   }
+      // }
     ]
   },
   {
