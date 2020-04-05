@@ -37,6 +37,15 @@ export function createMailReceiver (data) {
   })
 }
 
+// 编辑邮件接收人
+export function updateMailReceiver (param) {
+  return request({
+    url: base_url + 'mails/' + param.id,
+    method: 'put',
+    params: param
+  })
+}
+
 // 删除邮件接收人
 export function deleteMailReceiver (id) {
   return request({

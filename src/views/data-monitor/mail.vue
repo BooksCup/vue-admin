@@ -49,8 +49,8 @@
 
       <el-table-column align="center" min-width="100px" label="操作">
         <template slot-scope="{row, $index}">
-          <el-button size="small" type="primary" icon="el-icon-edit" @click="handleUpdate(row, $index)" />
-          <el-button size="small" type="danger" icon="el-icon-delete" @click="handleDelete(row, $index)" />
+          <el-button size="small" type="primary" icon="el-icon-edit" @click="handleUpdate(row, $index)"/>
+          <el-button size="small" type="danger" icon="el-icon-delete" @click="handleDelete(row, $index)"/>
         </template>
       </el-table-column>
     </el-table>
@@ -72,14 +72,14 @@
         style="width: 400px; margin-left:50px;"
       >
         <el-form-item label="姓名:" prop="name">
-          <el-input v-model="temp.name" placeholder="姓名(必填)" />
+          <el-input v-model="temp.name" placeholder="姓名(必填)"/>
         </el-form-item>
         <el-form-item label="邮箱:" prop="mail">
-          <el-input v-model="temp.mail" placeholder="邮箱(必填)" />
+          <el-input v-model="temp.mail" placeholder="邮箱(必填)"/>
         </el-form-item>
         <el-form-item label="任务类型:" prop="onOff">
           <el-select v-model="temp.onOff" class="filter-item">
-            <el-option v-for="item in onOffOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in onOffOptions" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -92,12 +92,41 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="updateFormVisible">
+      <el-form
+        ref="updateForm"
+        :model="temp"
+        label-position="left"
+        label-width="100px"
+        style="width: 400px; margin-left:50px;"
+      >
+        <el-form-item label="姓名:" prop="name">
+          <el-input v-model="temp.name" placeholder="姓名(必填)"/>
+        </el-form-item>
+        <el-form-item label="邮箱:" prop="mail">
+          <el-input v-model="temp.mail" placeholder="邮箱(必填)"/>
+        </el-form-item>
+        <el-form-item label="任务类型:" prop="onOff">
+          <el-select v-model="temp.onOff" class="filter-item">
+            <el-option v-for="item in onOffOptions" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="createFormVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="updateMailReceiver()">
+          保存
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import { fetchMailReceiver, createMailReceiver, deleteMailReceiver } from '../../api/data-monitor'
-  import { report_file_url } from '@/utils/config'
+  import { fetchMailReceiver, createMailReceiver, deleteMailReceiver, updateMailReceiver } from '../../api/data-monitor'
   import waves from '@/directive/waves' // waves directive
   import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -115,10 +144,10 @@
     components: { Pagination },
     directives: { waves },
     filters: {
-      onOffFilter(status) {
+      onOffFilter (status) {
         return onOffKeyValue[status]
       },
-      onOffTagFilter(onOff) {
+      onOffTagFilter (onOff) {
         const onOffTagMap = {
           '0': 'success',
           '1': 'danger'
@@ -126,7 +155,7 @@
         return onOffTagMap[onOff]
       }
     },
-    data() {
+    data () {
       return {
         onOffOptions,
         tableKey: 0,
@@ -138,6 +167,7 @@
           limit: 10
         },
         createFormVisible: false,
+        updateFormVisible: false,
         dialogStatus: '',
         textMap: {
           create: '创建任务'
@@ -145,11 +175,11 @@
         temp: {}
       }
     },
-    created() {
+    created () {
       this.getList()
     },
     methods: {
-      getList() {
+      getList () {
         this.listLoading = true
         fetchMailReceiver(this.listQuery).then(response => {
           const res = response.data
@@ -158,18 +188,18 @@
           this.listLoading = false
         })
       },
-      handleFilter() {
+      handleFilter () {
         this.listQuery.page = 1
         this.getList()
       },
-      resetTemp() {
+      resetTemp () {
         this.temp = {
           name: '',
           mail: '',
           onOff: '0'
         }
       },
-      handleCreate() {
+      handleCreate () {
         this.resetTemp()
         this.dialogStatus = 'create'
         this.createFormVisible = true
@@ -177,13 +207,27 @@
           this.$refs['dataForm'].clearValidate()
         })
       },
-      handleDelete(row, index) {
+      initTemp (row) {
+        this.temp = {
+          id: row.id,
+          name: row.name,
+          mail: row.mail,
+          onOff: row.onOff,
+          createTime: row.createTime
+        }
+      },
+      handleUpdate (row) {
+        this.initTemp(row)
+        this.dialogStatus = 'update'
+        this.updateFormVisible = true
+      },
+      handleDelete (row, index) {
         this.$confirm('确定要删除这个邮箱?', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'error'
         })
-          .then(async() => {
+          .then(async () => {
             deleteMailReceiver(row.id).then(response => {
               const code = response.status
               if (code === 200) {
@@ -207,7 +251,7 @@
             console.error(err)
           })
       },
-      createMailReceiver() {
+      createMailReceiver () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             createMailReceiver(this.temp).then(response => {
@@ -230,6 +274,37 @@
             }).catch(err => {
               this.$notify({
                 message: '创建失败',
+                type: 'error',
+                duration: 2000
+              })
+            })
+          }
+        })
+      },
+      updateMailReceiver () {
+        this.$refs['updateForm'].validate((valid) => {
+          if (valid) {
+            updateMailReceiver(this.temp).then(response => {
+              this.updateFormVisible = false
+              const code = response.status
+              if (code === 200) {
+                this.$notify({
+                  message: '编辑成功',
+                  type: 'success',
+                  duration: 2000
+                })
+                const index = this.list.findIndex(v => v.id === this.temp.id)
+                this.list.splice(index, 1, this.temp)
+              } else {
+                this.$notify({
+                  message: '编辑失败',
+                  type: 'error',
+                  duration: 2000
+                })
+              }
+            }).catch(error => {
+              this.$notify({
+                message: '编辑失败',
                 type: 'error',
                 duration: 2000
               })
