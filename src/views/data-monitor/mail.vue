@@ -49,13 +49,8 @@
 
       <el-table-column align="center" min-width="100px" label="操作">
         <template slot-scope="{row, $index}">
-          <el-button
-            size="small"
-            type="primary"
-            icon="el-icon-download"
-            :disabled="row.fileName === '' || row.fileName === null"
-            @click="handleDownload(row)"
-          />
+          <el-button size="small" type="primary" icon="el-icon-edit" @click="handleUpdate(row, $index)"/>
+          <el-button size="small" type="danger" icon="el-icon-delete" @click="handleDelete(row, $index)"/>
         </template>
       </el-table-column>
     </el-table>
@@ -76,20 +71,23 @@
         label-width="100px"
         style="width: 400px; margin-left:50px;"
       >
-        <el-form-item label="任务类型:" prop="type">
-          <el-select v-model="temp.type" class="filter-item">
-            <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"/>
-          </el-select>
+        <el-form-item label="姓名:" prop="name">
+          <el-input v-model="temp.name" placeholder="姓名(必填)"/>
         </el-form-item>
-        <el-form-item label="任务名:" prop="name">
-          <el-input v-model="temp.name" placeholder="任务名(选填)"/>
+        <el-form-item label="邮箱:" prop="mail">
+          <el-input v-model="temp.mail" placeholder="邮箱(必填)"/>
+        </el-form-item>
+        <el-form-item label="任务类型:" prop="onOff">
+          <el-select v-model="temp.onOff" class="filter-item">
+            <el-option v-for="item in onOffOptions" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="createFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="createTask()">
+        <el-button type="primary" @click="createMailReceiver()">
           保存
         </el-button>
       </div>
@@ -98,19 +96,10 @@
 </template>
 
 <script>
-  import { createTask, fetchMailReceiver } from '../../api/data-monitor'
+  import { fetchMailReceiver, createMailReceiver, deleteMailReceiver } from '../../api/data-monitor'
   import { report_file_url } from '@/utils/config'
   import waves from '@/directive/waves' // waves directive
   import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-
-  const typeOptions = [
-    { value: '0', label: '物品' }
-  ]
-
-  const typeKeyValue = typeOptions.reduce((acc, cur) => {
-    acc[cur.value] = cur.label
-    return acc
-  }, {})
 
   const onOffOptions = [
     { value: '0', label: '开启' },
@@ -126,24 +115,12 @@
     components: { Pagination },
     directives: { waves },
     filters: {
-      typeFilter (type) {
-        return typeKeyValue[type]
-      },
       onOffFilter (status) {
         return onOffKeyValue[status]
       },
-      statusClassFilter (status) {
-        const statusClassMap = {
-          '0': 'color:black;',
-          '1': 'color:orange;',
-          '2': 'color:green;',
-          '3': 'color:red;'
-        }
-        return statusClassMap[status]
-      },
       onOffTagFilter (onOff) {
         const onOffTagMap = {
-          '0': 'info',
+          '0': 'success',
           '1': 'danger'
         }
         return onOffTagMap[onOff]
@@ -151,10 +128,8 @@
     },
     data () {
       return {
-        typeOptions,
         onOffOptions,
         tableKey: 0,
-        pvData: [],
         list: null,
         total: 0,
         listLoading: true,
@@ -163,13 +138,11 @@
           limit: 10
         },
         createFormVisible: false,
-        updateFormVisible: false,
         dialogStatus: '',
         textMap: {
           create: '创建任务'
         },
         temp: {},
-        accountId: ''
       }
     },
     created () {
@@ -191,9 +164,9 @@
       },
       resetTemp () {
         this.temp = {
-          id: '',
           name: '',
-          type: '0'
+          mail: '',
+          onOff: '0'
         }
       },
       handleCreate () {
@@ -204,15 +177,40 @@
           this.$refs['dataForm'].clearValidate()
         })
       },
-      handleDownload (row) {
-        const a = document.createElement('a')
-        a.href = report_file_url + row.fileName
-        a.click()
+      handleDelete (row, index) {
+        this.$confirm('确定要删除这条邮箱?', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'error'
+        })
+          .then(async () => {
+            deleteMailReceiver(row.id).then(response => {
+              const code = response.status
+              if (code === 200) {
+                this.$notify({
+                  message: '删除成功!',
+                  type: 'success',
+                  duration: 2000
+                })
+                this.list.splice(index, 1)
+              } else {
+                this.$notify({
+                  message: '删除失败!',
+                  type: 'error',
+                  duration: 2000
+                })
+              }
+              console.log(response)
+            })
+          })
+          .catch(err => {
+            console.error(err)
+          })
       },
-      createTask () {
+      createMailReceiver () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            createTask(this.temp).then(response => {
+            createMailReceiver(this.temp).then(response => {
               this.createFormVisible = false
               const code = response.status
               if (code === 200) {
@@ -229,10 +227,9 @@
                   duration: 2000
                 })
               }
-            }).catch(error => {
-              const errorMsg = error.response.data.apiResultMessage
+            }).catch(err => {
               this.$notify({
-                message: '创建失败:' + errorMsg,
+                message: '创建失败',
                 type: 'error',
                 duration: 2000
               })

@@ -27,3 +27,20 @@ export function fetchMailReceiver (query) {
     params: query
   })
 }
+
+// 新增邮件接收人
+export function createMailReceiver (data) {
+  return request({
+    url: base_url + 'mails',
+    method: 'post',
+    params: data
+  })
+}
+
+// 删除邮件接收人
+export function deleteMailReceiver (id) {
+  return request({
+    url: base_url + 'mails/' + id,
+    method: 'delete'
+  })
+}
