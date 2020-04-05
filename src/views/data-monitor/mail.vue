@@ -49,8 +49,8 @@
 
       <el-table-column align="center" min-width="100px" label="操作">
         <template slot-scope="{row, $index}">
-          <el-button size="small" type="primary" icon="el-icon-edit" @click="handleUpdate(row, $index)"/>
-          <el-button size="small" type="danger" icon="el-icon-delete" @click="handleDelete(row, $index)"/>
+          <el-button size="small" type="primary" icon="el-icon-edit" @click="handleUpdate(row, $index)" />
+          <el-button size="small" type="danger" icon="el-icon-delete" @click="handleDelete(row, $index)" />
         </template>
       </el-table-column>
     </el-table>
@@ -72,14 +72,14 @@
         style="width: 400px; margin-left:50px;"
       >
         <el-form-item label="姓名:" prop="name">
-          <el-input v-model="temp.name" placeholder="姓名(必填)"/>
+          <el-input v-model="temp.name" placeholder="姓名(必填)" />
         </el-form-item>
         <el-form-item label="邮箱:" prop="mail">
-          <el-input v-model="temp.mail" placeholder="邮箱(必填)"/>
+          <el-input v-model="temp.mail" placeholder="邮箱(必填)" />
         </el-form-item>
         <el-form-item label="任务类型:" prop="onOff">
           <el-select v-model="temp.onOff" class="filter-item">
-            <el-option v-for="item in onOffOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            <el-option v-for="item in onOffOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -115,18 +115,18 @@
     components: { Pagination },
     directives: { waves },
     filters: {
-      onOffFilter (status) {
+      onOffFilter(status) {
         return onOffKeyValue[status]
       },
-      onOffTagFilter (onOff) {
+      onOffTagFilter(onOff) {
         const onOffTagMap = {
           '0': 'success',
           '1': 'danger'
         }
         return onOffTagMap[onOff]
-      },
+      }
     },
-    data () {
+    data() {
       return {
         onOffOptions,
         tableKey: 0,
@@ -142,14 +142,14 @@
         textMap: {
           create: '创建任务'
         },
-        temp: {},
+        temp: {}
       }
     },
-    created () {
+    created() {
       this.getList()
     },
     methods: {
-      getList () {
+      getList() {
         this.listLoading = true
         fetchMailReceiver(this.listQuery).then(response => {
           const res = response.data
@@ -158,18 +158,18 @@
           this.listLoading = false
         })
       },
-      handleFilter () {
+      handleFilter() {
         this.listQuery.page = 1
         this.getList()
       },
-      resetTemp () {
+      resetTemp() {
         this.temp = {
           name: '',
           mail: '',
           onOff: '0'
         }
       },
-      handleCreate () {
+      handleCreate() {
         this.resetTemp()
         this.dialogStatus = 'create'
         this.createFormVisible = true
@@ -177,13 +177,13 @@
           this.$refs['dataForm'].clearValidate()
         })
       },
-      handleDelete (row, index) {
-        this.$confirm('确定要删除这条邮箱?', {
+      handleDelete(row, index) {
+        this.$confirm('确定要删除这个邮箱?', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'error'
         })
-          .then(async () => {
+          .then(async() => {
             deleteMailReceiver(row.id).then(response => {
               const code = response.status
               if (code === 200) {
@@ -207,7 +207,7 @@
             console.error(err)
           })
       },
-      createMailReceiver () {
+      createMailReceiver() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             createMailReceiver(this.temp).then(response => {
