@@ -149,13 +149,13 @@ export const asyncRoutes = [
           title: '任务'
         }
       },
-      // {
-      //   path: 'personal-seal/:id',
-      //   component: () => import('@/views/e-contract/personal-seal'),
-      //   name: 'personal-seal',
-      //   meta: { title: '个人印章', noCache: true, activeMenu: '/e-contract/account' },
-      //   hidden: true
-      // },
+      {
+        path: 'mail-send-log/:id',
+        component: () => import('@/views/data-monitor/mail-send-log'),
+        name: 'mail-send-log',
+        meta: { title: '邮件发送日志', noCache: true, activeMenu: '/data-monitor/mail-send-log' },
+        hidden: true
+      },
       {
         path: 'mail',
         component: () => import('@/views/data-monitor/mail'),

@@ -23,7 +23,7 @@
     </div>
 
     <el-table :key="tableKey" v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" width="210px" label="任务类型">
+      <el-table-column align="center" width="120px" label="任务类型">
         <template slot-scope="scope">
           <span>{{ scope.row.type | typeFilter }}</span>
         </template>
@@ -65,6 +65,14 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" min-width="100px" label="发送日志">
+        <template slot-scope="{row}">
+          <router-link :to="'/data-monitor/mail-send-log/'+row.id">
+            <el-button type="warning" size="small" icon="el-icon-tickets"/>
+          </router-link>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" min-width="100px" label="操作">
         <template slot-scope="{row, $index}">
           <el-button
@@ -96,11 +104,11 @@
       >
         <el-form-item label="任务类型:" prop="type">
           <el-select v-model="temp.type" class="filter-item">
-            <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="任务名:" prop="name">
-          <el-input v-model="temp.name" placeholder="任务名(选填)" />
+          <el-input v-model="temp.name" placeholder="任务名(选填)"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -146,13 +154,13 @@
     components: { Pagination },
     directives: { waves },
     filters: {
-      typeFilter(type) {
+      typeFilter (type) {
         return typeKeyValue[type]
       },
-      statusFilter(status) {
+      statusFilter (status) {
         return statusKeyValue[status]
       },
-      statusClassFilter(status) {
+      statusClassFilter (status) {
         const statusClassMap = {
           '0': 'color:black;',
           '1': 'color:orange;',
@@ -162,7 +170,7 @@
         return statusClassMap[status]
       }
     },
-    data() {
+    data () {
       return {
         typeOptions,
         statusOptions,
@@ -185,11 +193,11 @@
         accountId: ''
       }
     },
-    created() {
+    created () {
       this.getList()
     },
     methods: {
-      getList() {
+      getList () {
         this.listLoading = true
         fetchTask(this.listQuery).then(response => {
           const res = response.data
@@ -198,18 +206,18 @@
           this.listLoading = false
         })
       },
-      handleFilter() {
+      handleFilter () {
         this.listQuery.page = 1
         this.getList()
       },
-      resetTemp() {
+      resetTemp () {
         this.temp = {
           id: '',
           name: '',
           type: '0'
         }
       },
-      handleCreate() {
+      handleCreate () {
         this.resetTemp()
         this.dialogStatus = 'create'
         this.createFormVisible = true
@@ -217,12 +225,12 @@
           this.$refs['dataForm'].clearValidate()
         })
       },
-      handleDownload(row) {
+      handleDownload (row) {
         const a = document.createElement('a')
         a.href = report_file_url + row.fileName
         a.click()
       },
-      createTask() {
+      createTask () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             createTask(this.temp).then(response => {

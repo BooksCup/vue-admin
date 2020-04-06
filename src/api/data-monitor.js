@@ -53,3 +53,21 @@ export function deleteMailReceiver (id) {
     method: 'delete'
   })
 }
+
+// 获取邮件发送日志
+export function fetchMailSendLog (query) {
+  return request({
+    url: base_url + 'mails/sendLog',
+    method: 'get',
+    params: query
+  })
+}
+
+// 重新发送邮件
+export function resendMail (param) {
+  return request({
+    url: base_url + 'mails/sendLog/' + param.id,
+    method: 'put',
+    params: param
+  })
+}
