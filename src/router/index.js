@@ -148,7 +148,7 @@ export const asyncRoutes = [
         meta: {
           title: '任务'
         }
-      }
+      },
       // {
       //   path: 'personal-seal/:id',
       //   component: () => import('@/views/e-contract/personal-seal'),
@@ -156,14 +156,14 @@ export const asyncRoutes = [
       //   meta: { title: '个人印章', noCache: true, activeMenu: '/e-contract/account' },
       //   hidden: true
       // },
-      // {
-      //   path: 'org',
-      //   component: () => import('@/views/e-contract/org'),
-      //   name: 'org',
-      //   meta: {
-      //     title: '机构账号'
-      //   }
-      // },
+      {
+        path: 'mail',
+        component: () => import('@/views/data-monitor/mail'),
+        name: 'mail',
+        meta: {
+          title: '邮箱'
+        }
+      }
       // {
       //   path: 'token',
       //   component: () => import('@/views/e-contract/token'),
@@ -503,7 +503,7 @@ const createRouter = () => new Router({
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
-export function resetRouter() {
+export function resetRouter () {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
