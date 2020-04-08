@@ -27,7 +27,7 @@
 
       <el-table-column align="center" min-width="100px" label="操作">
         <template slot-scope="{row, $index}">
-          <el-button size="small" type="primary" icon="el-icon-refresh" @click="resendMail(row, $index)"/>
+          <el-button size="small" type="primary" icon="el-icon-refresh" @click="resendMail(row, $index)" />
         </template>
       </el-table-column>
     </el-table>
@@ -61,10 +61,10 @@
     components: { Pagination },
     directives: { waves },
     filters: {
-      statusFilter (status) {
+      statusFilter(status) {
         return statusKeyValue[status]
       },
-      statusTagFilter (onOff) {
+      statusTagFilter(onOff) {
         const statusTagMap = {
           '0': 'success',
           '1': 'danger'
@@ -72,7 +72,7 @@
         return statusTagMap[onOff]
       }
     },
-    data () {
+    data() {
       return {
         statusOptions,
         tableKey: 0,
@@ -86,12 +86,12 @@
         }
       }
     },
-    created () {
+    created() {
       const taskId = this.$route.params && this.$route.params.id
       this.getList(taskId)
     },
     methods: {
-      getList (taskId) {
+      getList(taskId) {
         this.listLoading = true
         this.listQuery.taskId = taskId
         fetchMailSendLog(this.listQuery).then(response => {
@@ -101,11 +101,11 @@
           this.listLoading = false
         })
       },
-      handleFilter () {
+      handleFilter() {
         this.listQuery.page = 1
         this.getList()
       },
-      initTemp (row) {
+      initTemp(row) {
         this.temp = {
           id: row.id,
           receiverName: row.receiverName,
@@ -115,9 +115,11 @@
           createTime: row.createTime
         }
       },
-      resendMail (row) {
+      resendMail(row) {
         this.initTemp(row)
+        this.listLoading = true
         resendMail(this.temp).then(response => {
+          this.listLoading = false
           const code = response.status
           if (code === 200) {
             this.$notify({
