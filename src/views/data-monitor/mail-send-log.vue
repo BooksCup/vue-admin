@@ -125,6 +125,7 @@
               type: 'success',
               duration: 2000
             })
+            this.temp.status = '0'
             const index = this.list.findIndex(v => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
           } else {
