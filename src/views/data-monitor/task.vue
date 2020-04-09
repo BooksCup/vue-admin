@@ -47,13 +47,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="120px" label="异常数据">
+      <el-table-column align="center" width="100px" label="总数据">
         <template slot-scope="scope">
-          <span>{{ scope.row.outLierDataNum }}</span>
+          <span>{{ scope.row.totalDataNum }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="210px" label="耗时">
+      <el-table-column align="center" width="100px" label="异常数据">
+        <template slot-scope="scope">
+          <span style="color:red;">{{ scope.row.outLierDataNum }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" width="120px" label="耗时">
         <template slot-scope="scope">
           <span>{{ scope.row.costTime }}</span>
         </template>
