@@ -164,42 +164,26 @@ export const asyncRoutes = [
           title: '邮箱'
         }
       }
-      // {
-      //   path: 'token',
-      //   component: () => import('@/views/e-contract/token'),
-      //   name: 'Token',
-      //   meta: {
-      //     title: 'token'
-      //   }
-      // }
     ]
   },
   {
-    path: '/work',
+    path: '/check-template',
     component: Layout,
     redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
-    name: 'Work',
+    name: 'check-template',
     meta: {
-      title: '工作',
+      title: '测试模板',
       icon: 'table',
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
-        path: 'backlog',
-        component: () => import('@/views/work/backlog'),
-        name: 'Backlog',
+        path: 'goods-check-template',
+        component: () => import('@/views/data-monitor/goods-check-template'),
+        name: 'goods-check-template',
         meta: {
-          title: 'Backlog'
-        }
-      },
-      {
-        path: 'sprint',
-        component: () => import('@/views/work/sprint'),
-        name: 'Sprint',
-        meta: {
-          title: '迭代'
+          title: '物品'
         }
       }
     ]
@@ -503,7 +487,7 @@ const createRouter = () => new Router({
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
-export function resetRouter () {
+export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
