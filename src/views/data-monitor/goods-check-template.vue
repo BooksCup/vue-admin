@@ -1,6 +1,6 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="postForm" :model="temp" :rules="rules" class="form-container">
+    <el-form ref="postForm" v-loading="loadingData" :model="temp" :rules="rules" class="form-container">
 
       <sticky :z-index="10" :class-name="'sub-navbar ' + 'draft'">
         <el-button style="margin-left: 10px;" type="success" @click="submitForm">
@@ -25,15 +25,42 @@
         </el-form-item>
 
         <el-form-item label-width="130px" label="图片:" class="postInfo-container-item">
-          <el-input v-model="temp.goodsPhoto" style="width: 500px; margin-left: 10px;" />
+          <!--<el-input v-model="temp.goodsPhoto" style="width: 500px; margin-left: 10px;"/>-->
+          <pan-thumb v-for="goodsPhoto in temp.goodsPhotoList" :image="goodsPhoto" />
         </el-form-item>
 
         <el-form-item label-width="130px" label="属性:" class="postInfo-container-item">
-          <el-input v-model="temp.goodsAttr" style="width: 500px; margin-left: 10px;" />
+          <!--<el-input v-model="temp.goodsAttr" style="width: 500px; margin-left: 10px;"/>-->
+          <el-table
+            :data="temp.goodsAttrList"
+            border
+            fit
+            highlight-current-row
+            style="width: 500px; margin-left: 10px;"
+          >
+            <el-table-column align="center" min-width="50%" label="属性名">
+              <template slot-scope="scope">
+                <span>{{ scope.row.attrName }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column align="center" min-width="50%" label="属性值">
+              <template slot-scope="scope">
+                <span>{{ scope.row.attrValue }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-form-item>
 
         <el-form-item label-width="130px" label="检查结果:" class="postInfo-container-item">
-          <el-input v-model="temp.checkInfo" style="width: 500px; margin-left: 10px;" />
+          <el-tag
+            v-for="checkInfo in temp.checkInfoList"
+            v-if="temp.checkInfo != ''"
+            type="danger"
+            style="margin-left: 10px;"
+          >
+            {{ checkInfo }}
+          </el-tag>
         </el-form-item>
       </div>
     </el-form>
@@ -41,12 +68,13 @@
 </template>
 
 <script>
-  import Sticky from '@/components/Sticky' // 粘性header组件
+  import Sticky from '@/components/Sticky'
+  import PanThumb from '@/components/PanThumb'
   import { checkGoods } from '@/api/data-monitor'
 
   export default {
     name: 'GoodsCheckTemplate',
-    components: { Sticky },
+    components: { Sticky, PanThumb },
     props: {},
     data() {
       const validateRequire = (rule, value, callback) => {
@@ -61,6 +89,9 @@
           goodsNo: '',
           goodsName: '',
           goodsPhoto: '',
+          goodsPhotoList: [],
+          goodsAttrList: [],
+          checkInfoList: [],
           goodsAttr: '',
           checkInfo: ''
         },
