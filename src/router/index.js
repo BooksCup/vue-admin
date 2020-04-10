@@ -188,37 +188,37 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/admin',
-    component: Layout,
-    redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
-    name: 'Admin',
-    meta: {
-      title: '用户',
-      icon: 'user',
-      roles: ['admin', 'editor'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'user',
-        component: () => import('@/views/admin/user'),
-        name: 'User',
-        meta: {
-          title: '用户管理'
-        }
-      },
-      {
-        path: 'permission',
-        component: () => import('@/views/permission/directive'),
-        name: 'Permission',
-        meta: {
-          title: '权限管理'
-          // if do not set roles, means: this page does not require permission
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/admin',
+  //   component: Layout,
+  //   redirect: '/permission/page',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'Admin',
+  //   meta: {
+  //     title: '用户',
+  //     icon: 'user',
+  //     roles: ['admin', 'editor'] // you can set roles in root nav
+  //   },
+  //   children: [
+  //     {
+  //       path: 'user',
+  //       component: () => import('@/views/admin/user'),
+  //       name: 'User',
+  //       meta: {
+  //         title: '用户管理'
+  //       }
+  //     },
+  //     {
+  //       path: 'permission',
+  //       component: () => import('@/views/permission/directive'),
+  //       name: 'Permission',
+  //       meta: {
+  //         title: '权限管理'
+  //         // if do not set roles, means: this page does not require permission
+  //       }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/permission',
