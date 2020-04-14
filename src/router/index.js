@@ -188,6 +188,28 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/search',
+    component: Layout,
+    redirect: '/permission/page',
+    alwaysShow: true, // will always show the root menu
+    name: 'search',
+    meta: {
+      title: '搜索',
+      icon: 'table',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'file-item',
+        component: () => import('@/views/search/file-item'),
+        name: 'file-item',
+        meta: {
+          title: '文件'
+        }
+      }
+    ]
+  },
   // {
   //   path: '/admin',
   //   component: Layout,
@@ -487,7 +509,7 @@ const createRouter = () => new Router({
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
-export function resetRouter() {
+export function resetRouter () {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
