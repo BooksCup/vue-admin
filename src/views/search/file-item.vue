@@ -60,7 +60,7 @@
     components: { Pagination },
     directives: { waves },
     filters: {},
-    data () {
+    data() {
       return {
         tableKey: 0,
         list: null,
@@ -70,15 +70,13 @@
           page: 1,
           limit: 10,
           searchKey: ''
-        },
-        dialogStatus: '',
-        temp: {}
+        }
       }
     },
-    created () {
+    created() {
     },
     methods: {
-      getList () {
+      getList() {
         this.listLoading = true
         searchFileItem(this.listQuery).then(response => {
           const res = response.data
@@ -87,10 +85,10 @@
           this.listLoading = false
         })
       },
-      handleFilter () {
+      handleFilter() {
         this.listQuery.page = 1
         this.getList()
-      },
+      }
     }
   }
 </script>
