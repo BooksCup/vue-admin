@@ -79,10 +79,30 @@
       getList() {
         this.listLoading = true
         searchFileItem(this.listQuery).then(response => {
-          const res = response.data
-          this.list = res.content
-          this.total = res.totalElements
           this.listLoading = false
+          const res = response.data
+          const code = response.status
+          if (code === 200) {
+            this.list = res.content
+            this.total = res.totalElements
+          } else {
+            this.list = []
+            this.total = 0
+            this.$notify({
+              message: '查询失败',
+              type: 'error',
+              duration: 2000
+            })
+          }
+        }).catch(error => {
+          this.listLoading = false
+          this.list = []
+          this.total = 0
+          this.$notify({
+            message: '查询失败',
+            type: 'error',
+            duration: 2000
+          })
         })
       },
       handleFilter() {
