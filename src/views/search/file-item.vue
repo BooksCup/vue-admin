@@ -74,6 +74,7 @@
       }
     },
     created() {
+      this.getList()
     },
     methods: {
       getList() {
