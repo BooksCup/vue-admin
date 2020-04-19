@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-select v-model="listQuery.diskName" style="width: 140px" class="filter-item" @change="handleFilter">
+      <el-select v-model="listQuery.diskName" style="width: 140px" class="filter-item" @change="handleFilter" clearable="setValueNull">
         <el-option v-for="item in diskNameList" :key="item" :label="item" :value="item"/>
       </el-select>
       <el-input
@@ -121,6 +121,9 @@
           }
         }).catch(error => {
         })
+      },
+      setValueNull(val) {
+        this.listQuery.diskName = ''
       },
       handleFilter () {
         this.listQuery.page = 1
