@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-select v-model="listQuery.diskName" style="width: 140px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in diskNameList" :key="item" :label="item" :value="item"/>
+      </el-select>
       <el-input
         v-model="listQuery.searchKey"
         placeholder="请输入关键字"
@@ -51,7 +54,7 @@
 </template>
 
 <script>
-  import { searchFileItem } from '../../api/search'
+  import { searchFileItem, getDiskNameList } from '../../api/search'
   import waves from '@/directive/waves' // waves directive
   import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -60,7 +63,7 @@
     components: { Pagination },
     directives: { waves },
     filters: {},
-    data() {
+    data () {
       return {
         tableKey: 0,
         list: null,
@@ -69,15 +72,18 @@
         listQuery: {
           page: 1,
           limit: 10,
-          searchKey: ''
-        }
+          searchKey: '',
+          diskName: ''
+        },
+        diskNameList: []
       }
     },
-    created() {
+    created () {
+      this.getDiskNameList()
       this.getList()
     },
     methods: {
-      getList() {
+      getList () {
         this.listLoading = true
         searchFileItem(this.listQuery).then(response => {
           this.listLoading = false
@@ -106,7 +112,17 @@
           })
         })
       },
-      handleFilter() {
+      getDiskNameList () {
+        getDiskNameList().then(response => {
+          const res = response.data
+          const code = response.status
+          if (code === 200) {
+            this.diskNameList = res
+          }
+        }).catch(error => {
+        })
+      },
+      handleFilter () {
         this.listQuery.page = 1
         this.getList()
       }
